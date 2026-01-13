@@ -96,6 +96,14 @@ int main()
     if (!map.load("tileset.png", {32, 32}, level.data(), 16, 8, horizontal, vertical))
         return -1;
 
+    sf::Texture texture;
+    if (!texture.loadFromFile("red.png", false, sf::IntRect({0, 0}, {static_cast<int>(horizontal)/16, static_cast<int>(vertical)/8})))
+    {
+        return -1;
+    }
+    sf::Sprite player(texture);
+    player.setPosition({static_cast<float>(horizontal/16*6), static_cast<float>(vertical/8*3)});
+
     // run the main loop
     while (window.isOpen())
     {
@@ -103,13 +111,29 @@ int main()
         while (const std::optional event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
-                window.close();
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Escape))
-                window.close();
+                window.close();            
         }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Escape))
+            window.close();
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::W)) {
+            player.move({0.f, -.2f});
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::S)) {
+            player.move({0.f, .2f});
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::A)) {
+            player.move({-.2f, 0.f});
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::D)) {
+            player.move({.2f, 0.f});
+        }
+
         // draw the map
         window.clear();
         window.draw(map);
+        window.draw(player);
         window.display();
     }
 }
