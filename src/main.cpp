@@ -1,10 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "wtypes.h"
 
 class TileMap : public sf::Drawable, public sf::Transformable
 {
 public:
-    bool load(const std::filesystem::path& tileset, sf::Vector2u tileSize, const int* tiles, unsigned int width, unsigned int height)
+    bool load(const std::filesystem::path& tileset, sf::Vector2u tileSize, const int* tiles, unsigned int width, unsigned int height, unsigned int horizontal, unsigned int vertical)
     {
         // load the tileset texture
         if (!m_tileset.loadFromFile(tileset))
@@ -30,12 +31,12 @@ public:
                 sf::Vertex* triangles = &m_vertices[(i + j * width) * 6];
 
                 // define the 6 corners of the two triangles
-                triangles[0].position = sf::Vector2f(i * tileSize.x, j * tileSize.y);
-                triangles[1].position = sf::Vector2f((i + 1) * tileSize.x, j * tileSize.y);
-                triangles[2].position = sf::Vector2f(i * tileSize.x, (j + 1) * tileSize.y);
-                triangles[3].position = sf::Vector2f(i * tileSize.x, (j + 1) * tileSize.y);
-                triangles[4].position = sf::Vector2f((i + 1) * tileSize.x, j * tileSize.y);
-                triangles[5].position = sf::Vector2f((i + 1) * tileSize.x, (j + 1) * tileSize.y);
+                triangles[0].position = sf::Vector2f(i * horizontal/width, j * vertical/height);
+                triangles[1].position = sf::Vector2f((i + 1) * horizontal/width, j * vertical/height);
+                triangles[2].position = sf::Vector2f(i * horizontal/width, (j + 1) * vertical/height);
+                triangles[3].position = sf::Vector2f(i * horizontal/width, (j + 1) * vertical/height);
+                triangles[4].position = sf::Vector2f((i + 1) * horizontal/width, j * vertical/height);
+                triangles[5].position = sf::Vector2f((i + 1) * horizontal/width, (j + 1) * vertical/height);
 
                 // define the 6 matching texture coordinates
                 triangles[0].texCoords = sf::Vector2f(tu * tileSize.x, tv * tileSize.y);
@@ -69,8 +70,14 @@ private:
 
 int main()
 {
+    RECT desktop;
+    const HWND hDesktop = GetDesktopWindow();
+    GetWindowRect(hDesktop, &desktop);
+    unsigned int horizontal = desktop.right;;
+    unsigned int vertical = desktop.bottom;;
+
     // create the window
-    sf::RenderWindow window(sf::VideoMode({512, 256}), "Terrarium");
+    sf::RenderWindow window(sf::VideoMode({horizontal, vertical}), "Terrarium", sf::State::Fullscreen);
 
     // define the level with an array of tile indices
     constexpr std::array level = {
@@ -86,7 +93,7 @@ int main()
 
     // create the tilemap from the level definition
     TileMap map;
-    if (!map.load("tileset.png", {32, 32}, level.data(), 16, 8))
+    if (!map.load("tileset.png", {32, 32}, level.data(), 16, 8, horizontal, vertical))
         return -1;
 
     // run the main loop
@@ -97,8 +104,9 @@ int main()
         {
             if (event->is<sf::Event::Closed>())
                 window.close();
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Escape))
+                window.close();
         }
-
         // draw the map
         window.clear();
         window.draw(map);
