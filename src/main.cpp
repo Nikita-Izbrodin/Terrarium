@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <cmath>
 #include "wtypes.h"
 
 class TileMap : public sf::Drawable, public sf::Transformable
@@ -68,21 +69,125 @@ private:
     sf::Texture     m_tileset;
 };
 
+
+
+unsigned int horizontal;
+unsigned int vertical;
+
+class Player
+{
+    public:
+    sf::Sprite playerSprite;
+    Player(sf::Texture& texture) : playerSprite(texture) {
+    }
+    sf::Vector2f getTopLeftPos ()
+    {
+        return playerSprite.getPosition();
+    }
+    sf::Vector2f getTopRightPos ()
+    {
+        sf::Vector2f topRight(playerSprite.getPosition().x + static_cast<int>(horizontal)/16, playerSprite.getPosition().y);
+        return topRight;
+    }
+    sf::Vector2f getBotLeftPos ()
+    {
+        return playerSprite.getPosition();
+    }
+    sf::Vector2f getBotRightPos ()
+    {
+        return playerSprite.getPosition();
+    }
+};
+
+bool isTopEntityCollidingMap(Player player, const int* tiles) {
+    bool topLeftColliding = false;
+    unsigned int cornerX = static_cast<unsigned int>(floor(player.getTopLeftPos().x / 160.f));
+    unsigned int cornerY = static_cast<unsigned int>(floor(player.getTopLeftPos().y / 180.f));
+    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+        topLeftColliding = true;
+    }
+
+    bool topRightColliding = false;
+    cornerX = static_cast<unsigned int>(floor((player.getTopLeftPos().x + 160 - 1)/ 160.f));
+    cornerY = static_cast<unsigned int>(floor(player.getTopLeftPos().y / 180.f));
+    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+        topRightColliding = true;
+    }
+
+    return topLeftColliding || topRightColliding;
+}
+
+
+bool isBotEntityCollidingMap(Player player, const int* tiles) {
+    bool botLeftColliding = false;
+    unsigned int cornerX = static_cast<unsigned int>(floor(player.getTopLeftPos().x / 160.f));
+    unsigned int cornerY = static_cast<unsigned int>(floor((player.getTopLeftPos().y +180 - 1) / 180.f));
+    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+        botLeftColliding = true;
+    }
+
+    bool botRightColliding = false;
+    cornerX = static_cast<unsigned int>(floor((player.getTopLeftPos().x + 160 - 1)/ 160.f));
+    cornerY = static_cast<unsigned int>(floor((player.getTopLeftPos().y +180 - 1)/ 180.f));
+    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+        botRightColliding = true;
+    }
+
+    return botLeftColliding || botRightColliding;
+}
+
+bool isLeftEntityCollidingMap(Player player, const int* tiles) {
+    bool topLeftColliding = false;
+    unsigned int cornerX = static_cast<unsigned int>(floor(player.getTopLeftPos().x / 160.f));
+    unsigned int cornerY = static_cast<unsigned int>(floor(player.getTopLeftPos().y / 180.f));
+    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+        topLeftColliding = true;
+    }
+
+    bool botLeftColliding = false;
+    cornerX = static_cast<unsigned int>(floor(player.getTopLeftPos().x / 160.f));
+    cornerY = static_cast<unsigned int>(floor((player.getTopLeftPos().y +180 - 1) / 180.f));
+    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+        botLeftColliding = true;
+    }
+
+    return topLeftColliding || botLeftColliding;
+}
+
+bool isRightEntityCollidingMap(Player player, const int* tiles) {
+    bool botRightColliding = false;
+    unsigned int cornerX = static_cast<unsigned int>(floor((player.getTopLeftPos().x + 160 - 1)/ 160.f));
+    unsigned int cornerY = static_cast<unsigned int>(floor((player.getTopLeftPos().y +180 -1) / 180.f));
+    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+        botRightColliding = true;
+    }
+
+
+    bool topRightColliding = false;
+    cornerX = static_cast<unsigned int>(floor((player.getTopLeftPos().x + 160 - 1)/ 160.f));
+    cornerY = static_cast<unsigned int>(floor(player.getTopLeftPos().y / 180.f));
+    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+        topRightColliding = true;
+    }
+
+    return botRightColliding || topRightColliding;
+}
+
 int main()
 {
     RECT desktop;
     const HWND hDesktop = GetDesktopWindow();
     GetWindowRect(hDesktop, &desktop);
-    unsigned int horizontal = desktop.right;;
-    unsigned int vertical = desktop.bottom;;
+    horizontal = desktop.right;
+    vertical = desktop.bottom;
 
     // create the window
     sf::RenderWindow window(sf::VideoMode({horizontal, vertical}), "Terrarium", sf::State::Fullscreen);
 
     // define the level with an array of tile indices
     constexpr std::array level = {
-        0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0,
         1, 1, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3,
         0, 1, 0, 0, 2, 0, 3, 3, 3, 0, 1, 1, 1, 0, 0, 0,
         0, 1, 1, 0, 3, 3, 3, 0, 0, 0, 1, 1, 1, 2, 0, 0,
@@ -101,8 +206,12 @@ int main()
     {
         return -1;
     }
-    sf::Sprite player(texture);
-    player.setPosition({static_cast<float>(horizontal/16*6), static_cast<float>(vertical/8*3)});
+
+    Player player(texture);
+
+    //sf::Sprite player(texture);
+    player.playerSprite.setPosition({static_cast<float>(horizontal/16*6), static_cast<float>(vertical/8*3)});
+    
 
     // run the main loop
     while (window.isOpen())
@@ -118,22 +227,37 @@ int main()
             window.close();
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::W)) {
-            player.move({0.f, -.2f});
-        }
+            player.playerSprite.move({0.f, -.2f});
+            if (isTopEntityCollidingMap(player, level.data())) {
+                player.playerSprite.move({0.f, .2f});
+            }
+        } 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::S)) {
-            player.move({0.f, .2f});
+            player.playerSprite.move({0.f, .2f});
+            if (isBotEntityCollidingMap(player, level.data())) {
+                player.playerSprite.move({0.f, -.2f});
+            }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::A)) {
-            player.move({-.2f, 0.f});
+            player.playerSprite.move({-.2f, 0.f});
+            if (isLeftEntityCollidingMap(player, level.data())) {
+                player.playerSprite.move({.2f, 0.f});
+            }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::D)) {
-            player.move({.2f, 0.f});
+            player.playerSprite.move({.2f, 0.f});
+            if (isRightEntityCollidingMap(player, level.data())) {
+                player.playerSprite.move({-.2f, 0.f});
+            }
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Q)) {
+            std::cout << "X: " << player.getTopRightPos().x << " " << "Y: " << player.getTopRightPos().y << "\n";
         }
 
         // draw the map
         window.clear();
         window.draw(map);
-        window.draw(player);
+        window.draw(player.playerSprite);
         window.display();
     }
 }
