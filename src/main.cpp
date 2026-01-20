@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cmath>
 #include "wtypes.h"
+#include "tileMap.hpp"
 
 class TileMap : public sf::Drawable, public sf::Transformable
 {
@@ -224,6 +225,8 @@ int main()
     sf::Time lastTime = clock.getElapsedTime();
     sf::Time currentTime = clock.getElapsedTime();
 
+    test newTest;
+
     // run the main loop
     while (window.isOpen())
     {
@@ -266,7 +269,8 @@ int main()
             }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Q)) {
-            std::cout << isGrounded;
+            //std::cout << isGrounded;
+            newTest.print();
         }
 
         // draw the map
