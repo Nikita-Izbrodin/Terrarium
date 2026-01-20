@@ -77,6 +77,8 @@ unsigned int vertical;
 class Player
 {
     public:
+    float xVelocity = 0.2f;
+    float yVelocity = 2000.0f;
     sf::Sprite playerSprite;
     Player(sf::Texture& texture) : playerSprite(texture) {
     }
@@ -103,14 +105,14 @@ bool isTopEntityCollidingMap(Player player, const int* tiles) {
     bool topLeftColliding = false;
     unsigned int cornerX = static_cast<unsigned int>(floor(player.getTopLeftPos().x / 160.f));
     unsigned int cornerY = static_cast<unsigned int>(floor(player.getTopLeftPos().y / 180.f));
-    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+    if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         topLeftColliding = true;
     }
 
     bool topRightColliding = false;
     cornerX = static_cast<unsigned int>(floor((player.getTopLeftPos().x + 160 - 1)/ 160.f));
     cornerY = static_cast<unsigned int>(floor(player.getTopLeftPos().y / 180.f));
-    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+    if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         topRightColliding = true;
     }
 
@@ -121,15 +123,15 @@ bool isTopEntityCollidingMap(Player player, const int* tiles) {
 bool isBotEntityCollidingMap(Player player, const int* tiles) {
     bool botLeftColliding = false;
     unsigned int cornerX = static_cast<unsigned int>(floor(player.getTopLeftPos().x / 160.f));
-    unsigned int cornerY = static_cast<unsigned int>(floor((player.getTopLeftPos().y +180 - 1) / 180.f));
-    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+    unsigned int cornerY = static_cast<unsigned int>(floor((player.getTopLeftPos().y +180) / 180.f));
+    if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         botLeftColliding = true;
     }
 
     bool botRightColliding = false;
     cornerX = static_cast<unsigned int>(floor((player.getTopLeftPos().x + 160 - 1)/ 160.f));
-    cornerY = static_cast<unsigned int>(floor((player.getTopLeftPos().y +180 - 1)/ 180.f));
-    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+    cornerY = static_cast<unsigned int>(floor((player.getTopLeftPos().y +180)/ 180.f));
+    if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         botRightColliding = true;
     }
 
@@ -140,14 +142,14 @@ bool isLeftEntityCollidingMap(Player player, const int* tiles) {
     bool topLeftColliding = false;
     unsigned int cornerX = static_cast<unsigned int>(floor(player.getTopLeftPos().x / 160.f));
     unsigned int cornerY = static_cast<unsigned int>(floor(player.getTopLeftPos().y / 180.f));
-    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+    if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         topLeftColliding = true;
     }
 
     bool botLeftColliding = false;
     cornerX = static_cast<unsigned int>(floor(player.getTopLeftPos().x / 160.f));
     cornerY = static_cast<unsigned int>(floor((player.getTopLeftPos().y +180 - 1) / 180.f));
-    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+    if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         botLeftColliding = true;
     }
 
@@ -158,7 +160,7 @@ bool isRightEntityCollidingMap(Player player, const int* tiles) {
     bool botRightColliding = false;
     unsigned int cornerX = static_cast<unsigned int>(floor((player.getTopLeftPos().x + 160 - 1)/ 160.f));
     unsigned int cornerY = static_cast<unsigned int>(floor((player.getTopLeftPos().y +180 -1) / 180.f));
-    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+    if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         botRightColliding = true;
     }
 
@@ -166,7 +168,7 @@ bool isRightEntityCollidingMap(Player player, const int* tiles) {
     bool topRightColliding = false;
     cornerX = static_cast<unsigned int>(floor((player.getTopLeftPos().x + 160 - 1)/ 160.f));
     cornerY = static_cast<unsigned int>(floor(player.getTopLeftPos().y / 180.f));
-    if (tiles[cornerX + cornerY * 16] == 1 || tiles[cornerX + cornerY * 16] == 2) {
+    if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         topRightColliding = true;
     }
 
@@ -180,20 +182,23 @@ int main()
     GetWindowRect(hDesktop, &desktop);
     horizontal = desktop.right;
     vertical = desktop.bottom;
+    bool isGrounded = false;
+    float gravity = 400.f;
+    float jumpForce = 1.f;
 
     // create the window
     sf::RenderWindow window(sf::VideoMode({horizontal, vertical}), "Terrarium", sf::State::Fullscreen);
 
     // define the level with an array of tile indices
     constexpr std::array level = {
-        0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0,
-        1, 1, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3,
-        0, 1, 0, 0, 2, 0, 3, 3, 3, 0, 1, 1, 1, 0, 0, 0,
-        0, 1, 1, 0, 3, 3, 3, 0, 0, 0, 1, 1, 1, 2, 0, 0,
-        0, 0, 1, 0, 3, 0, 2, 2, 0, 0, 1, 1, 1, 1, 2, 0,
-        2, 0, 1, 0, 3, 0, 2, 2, 2, 0, 1, 1, 1, 1, 1, 1,
-        0, 0, 1, 0, 3, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
     };
 
     // create the tilemap from the level definition
@@ -211,11 +216,20 @@ int main()
 
     //sf::Sprite player(texture);
     player.playerSprite.setPosition({static_cast<float>(horizontal/16*6), static_cast<float>(vertical/8*3)});
+    if (isBotEntityCollidingMap) {
+        isGrounded = true;
+    }
     
+    sf::Clock clock; // starts the clock
+    sf::Time lastTime = clock.getElapsedTime();
+    sf::Time currentTime = clock.getElapsedTime();
 
     // run the main loop
     while (window.isOpen())
     {
+        currentTime = clock.getElapsedTime();
+        sf::Time dt = currentTime - lastTime;
+
         // handle events
         while (const std::optional event = window.pollEvent())
         {
@@ -226,18 +240,19 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Escape))
             window.close();
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::W)) {
-            player.playerSprite.move({0.f, -.2f});
+        player.playerSprite.move({0.0f, gravity * dt.asSeconds()});
+        if (isBotEntityCollidingMap(player, level.data())) {
+            player.playerSprite.move({-0.0f, -gravity * dt.asSeconds()});
+            isGrounded = true;
+        }
+        
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Space)) {
+            player.playerSprite.move({0.f, -player.yVelocity * dt.asSeconds()});
+            isGrounded = false;
             if (isTopEntityCollidingMap(player, level.data())) {
-                player.playerSprite.move({0.f, .2f});
+                player.playerSprite.move({0.f, player.yVelocity * dt.asSeconds()});
             }
         } 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::S)) {
-            player.playerSprite.move({0.f, .2f});
-            if (isBotEntityCollidingMap(player, level.data())) {
-                player.playerSprite.move({0.f, -.2f});
-            }
-        }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::A)) {
             player.playerSprite.move({-.2f, 0.f});
             if (isLeftEntityCollidingMap(player, level.data())) {
@@ -251,7 +266,7 @@ int main()
             }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Q)) {
-            std::cout << "X: " << player.getTopRightPos().x << " " << "Y: " << player.getTopRightPos().y << "\n";
+            std::cout << isGrounded;
         }
 
         // draw the map
@@ -259,5 +274,7 @@ int main()
         window.draw(map);
         window.draw(player.playerSprite);
         window.display();
+
+        lastTime = currentTime;
     }
 }
