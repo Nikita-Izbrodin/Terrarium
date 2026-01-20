@@ -15,6 +15,8 @@ FetchContent_MakeAvailable(SFML)
 add_executable(${PROJECT_NAME}
 src/main.cpp
 src/tileMap.cpp
+src/entities/player.cpp
+src/logic/collision.cpp
 )
 
 target_compile_features(${PROJECT_NAME}
