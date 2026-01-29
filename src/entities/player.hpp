@@ -8,4 +8,5 @@ class Player
     float yVelocity = 2000.0f;
     sf::Sprite playerSprite;
     Player(sf::Texture& texture);
+    void init(sf::Texture& texture);
 };

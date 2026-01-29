@@ -17,6 +17,7 @@ src/main.cpp
 src/tileMap.cpp
 src/entities/player.cpp
 src/logic/collision.cpp
+src/logic/keyboardInput.cpp
 )
 
 target_compile_features(${PROJECT_NAME}
