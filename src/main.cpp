@@ -14,12 +14,12 @@ sf::RenderWindow window;
 sf::Time dt;
 sf::Texture texture;
 Player player(texture);
-std::array<int, 128> level;
+std::array<int, 128> level; // !! Hardcoded size
 
 int main()
 {
     gravity = 400.f;
-    
+
     level = {
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1,
@@ -37,14 +37,15 @@ int main()
     horizontal = desktop.right;
     vertical = desktop.bottom;
     
-    //sf::RenderWindow window(sf::VideoMode({horizontal, vertical}), "Terrarium", sf::State::Fullscreen);
     window.create(sf::VideoMode({horizontal, vertical}), "Terrarium", sf::State::Fullscreen);
 
     TileMap map;
     if (!map.load("tileset.png", {32, 32}, level.data(), 16, 8, horizontal, vertical))
         return -1;
 
+    sf::View camera = sf::View({static_cast<float>(horizontal)/2, static_cast<float>(vertical)/2}, {static_cast<float>(horizontal), static_cast<float>(vertical)});
     
+
     if (!texture.loadFromFile("red.png", false, sf::IntRect({0, 0}, {static_cast<int>(horizontal)/16, static_cast<int>(vertical)/8})))
     {
         return -1;
@@ -76,6 +77,7 @@ int main()
 
         processKeyboardInput();
 
+        window.setView(camera);
         window.clear();
         window.draw(map);
         window.draw(player.playerSprite);
