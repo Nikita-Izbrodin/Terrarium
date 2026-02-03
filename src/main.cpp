@@ -18,13 +18,13 @@ std::array<int, 128> level; // !! Hardcoded size
 
 int main()
 {
-    gravity = 400.f;
+    gravity = 1000.f;
 
     level = {
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1,
-        1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
         3, 3, 3, 3, 3, 3, 3, 3, 1, 3, 3, 3, 3, 3, 3, 3,
         3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
@@ -44,7 +44,7 @@ int main()
         return -1;
 
     sf::View camera = sf::View({static_cast<float>(horizontal)/2, static_cast<float>(vertical)/2}, {static_cast<float>(horizontal), static_cast<float>(vertical)});
-    
+    camera.zoom(0.8f);
 
     if (!texture.loadFromFile("red.png", false, sf::IntRect({0, 0}, {static_cast<int>(horizontal)/16, static_cast<int>(vertical)/8})))
     {
@@ -76,6 +76,10 @@ int main()
         }
 
         processKeyboardInput();
+        camera.setCenter({
+            player.playerSprite.getPosition().x + player.playerSprite.getTexture().getSize().x/ 2,
+            player.playerSprite.getPosition().y + player.playerSprite.getTexture().getSize().y/ 2
+        });
 
         window.setView(camera);
         window.clear();
