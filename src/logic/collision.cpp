@@ -1,17 +1,18 @@
 #include "collision.hpp"
 #include <cmath>
+#include "../globals.hpp"
 
 bool isTopEntityCollidingMap(Player player, const int* tiles) {
     bool topLeftColliding = false;
-    unsigned int cornerX = static_cast<unsigned int>(floor(player.playerSprite.getPosition().x / 160.f));
-    unsigned int cornerY = static_cast<unsigned int>(floor(player.playerSprite.getPosition().y / 180.f));
+    unsigned int cornerX = static_cast<unsigned int>(floor(player.playerSprite.getPosition().x / (static_cast<float>(horizontal)/16.f)));
+    unsigned int cornerY = static_cast<unsigned int>(floor(player.playerSprite.getPosition().y / (static_cast<float>(vertical)/8.f)));
     if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         topLeftColliding = true;
     }
 
     bool topRightColliding = false;
-    cornerX = static_cast<unsigned int>(floor((player.playerSprite.getPosition().x + 160 - 1)/ 160.f));
-    cornerY = static_cast<unsigned int>(floor(player.playerSprite.getPosition().y / 180.f));
+    cornerX = static_cast<unsigned int>(floor((player.playerSprite.getPosition().x + (static_cast<float>(horizontal)/16.f) - 1)/ (static_cast<float>(horizontal)/16.f)));
+    cornerY = static_cast<unsigned int>(floor(player.playerSprite.getPosition().y / (static_cast<float>(vertical)/8.f)));
     if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         topRightColliding = true;
     }
@@ -22,15 +23,15 @@ bool isTopEntityCollidingMap(Player player, const int* tiles) {
 
 bool isBotEntityCollidingMap(Player player, const int* tiles) {
     bool botLeftColliding = false;
-    unsigned int cornerX = static_cast<unsigned int>(floor(player.playerSprite.getPosition().x / 160.f));
-    unsigned int cornerY = static_cast<unsigned int>(floor((player.playerSprite.getPosition().y +180) / 180.f));
+    unsigned int cornerX = static_cast<unsigned int>(floor(player.playerSprite.getPosition().x / (static_cast<float>(horizontal)/16.f)));
+    unsigned int cornerY = static_cast<unsigned int>(floor((player.playerSprite.getPosition().y + (static_cast<float>(vertical)/8.f)) / (static_cast<float>(vertical)/8.f)));
     if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         botLeftColliding = true;
     }
 
     bool botRightColliding = false;
-    cornerX = static_cast<unsigned int>(floor((player.playerSprite.getPosition().x + 160 - 1)/ 160.f));
-    cornerY = static_cast<unsigned int>(floor((player.playerSprite.getPosition().y +180)/ 180.f));
+    cornerX = static_cast<unsigned int>(floor((player.playerSprite.getPosition().x + (static_cast<float>(horizontal)/16.f) - 1)/ (static_cast<float>(horizontal)/16.f)));
+    cornerY = static_cast<unsigned int>(floor((player.playerSprite.getPosition().y + (static_cast<float>(vertical)/8.f))/ (static_cast<float>(vertical)/8.f)));
     if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         botRightColliding = true;
     }
@@ -40,15 +41,15 @@ bool isBotEntityCollidingMap(Player player, const int* tiles) {
 
 bool isLeftEntityCollidingMap(Player player, const int* tiles) {
     bool topLeftColliding = false;
-    unsigned int cornerX = static_cast<unsigned int>(floor(player.playerSprite.getPosition().x / 160.f));
-    unsigned int cornerY = static_cast<unsigned int>(floor(player.playerSprite.getPosition().y / 180.f));
+    unsigned int cornerX = static_cast<unsigned int>(floor(player.playerSprite.getPosition().x / (static_cast<float>(horizontal)/16.f)));
+    unsigned int cornerY = static_cast<unsigned int>(floor(player.playerSprite.getPosition().y / (static_cast<float>(vertical)/8.f)));
     if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         topLeftColliding = true;
     }
 
     bool botLeftColliding = false;
-    cornerX = static_cast<unsigned int>(floor(player.playerSprite.getPosition().x / 160.f));
-    cornerY = static_cast<unsigned int>(floor((player.playerSprite.getPosition().y +180 - 1) / 180.f));
+    cornerX = static_cast<unsigned int>(floor(player.playerSprite.getPosition().x / (static_cast<float>(horizontal)/16.f)));
+    cornerY = static_cast<unsigned int>(floor((player.playerSprite.getPosition().y + (static_cast<float>(vertical)/8.f) - 1) / (static_cast<float>(vertical)/8.f)));
     if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         botLeftColliding = true;
     }
@@ -58,16 +59,16 @@ bool isLeftEntityCollidingMap(Player player, const int* tiles) {
 
 bool isRightEntityCollidingMap(Player player, const int* tiles) {
     bool botRightColliding = false;
-    unsigned int cornerX = static_cast<unsigned int>(floor((player.playerSprite.getPosition().x + 160 - 1)/ 160.f));
-    unsigned int cornerY = static_cast<unsigned int>(floor((player.playerSprite.getPosition().y +180 -1) / 180.f));
+    unsigned int cornerX = static_cast<unsigned int>(floor((player.playerSprite.getPosition().x + (static_cast<float>(horizontal)/16.f) - 1)/ (static_cast<float>(horizontal)/16.f)));
+    unsigned int cornerY = static_cast<unsigned int>(floor((player.playerSprite.getPosition().y + (static_cast<float>(vertical)/8.f) -1) / (static_cast<float>(vertical)/8.f)));
     if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         botRightColliding = true;
     }
 
 
     bool topRightColliding = false;
-    cornerX = static_cast<unsigned int>(floor((player.playerSprite.getPosition().x + 160 - 1)/ 160.f));
-    cornerY = static_cast<unsigned int>(floor(player.playerSprite.getPosition().y / 180.f));
+    cornerX = static_cast<unsigned int>(floor((player.playerSprite.getPosition().x + (static_cast<float>(horizontal)/16.f) - 1)/ (static_cast<float>(horizontal)/16.f)));
+    cornerY = static_cast<unsigned int>(floor(player.playerSprite.getPosition().y / (static_cast<float>(vertical)/8.f)));
     if (tiles[cornerX + cornerY * 16] == 0 || tiles[cornerX + cornerY * 16] == 3) {
         topRightColliding = true;
     }
