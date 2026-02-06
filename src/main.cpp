@@ -6,6 +6,10 @@
 #include "logic/collision.hpp"
 #include "logic/keyboardInput.hpp"
 #include "globals.hpp"
+#include <vector>
+
+//const int WORLD_WIDTH = 4200;
+//const int WORLD_HEIGHT = 1200;
 
 unsigned int horizontal;
 unsigned int vertical;
@@ -14,12 +18,29 @@ sf::RenderWindow window;
 sf::Time dt;
 sf::Texture texture;
 Player player(texture);
-std::array<int, 128> level; // !! Hardcoded size
+std::array<int, WORLD_HEIGHT*WORLD_WIDTH> level; // !! Hardcoded size
 
 int main()
 {
     gravity = 1000.f;
+    //gravity = 0.f;
 
+    int *tiles = level.data();
+
+    for (int i  = 0; i < (WORLD_HEIGHT/4)*WORLD_WIDTH; i++)
+    {
+        tiles[i] = 1; // air
+    }
+    for (int i  = (WORLD_HEIGHT/4)*WORLD_WIDTH; i < (WORLD_HEIGHT/4)*WORLD_WIDTH + WORLD_WIDTH; i++)
+    {
+        tiles[i] = 0; // grass
+    }
+    for (int i = (WORLD_HEIGHT/4)*WORLD_WIDTH + WORLD_WIDTH; i < WORLD_HEIGHT*WORLD_WIDTH; i++)
+    {
+        tiles[i] = 3; // stone
+    }
+
+    /*
     level = {
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1,
@@ -30,6 +51,7 @@ int main()
         3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
         3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
     };
+    */
 
     RECT desktop;
     const HWND hDesktop = GetDesktopWindow();
@@ -41,29 +63,26 @@ int main()
     window.setVerticalSyncEnabled(false);
 
     TileMap map;
-    if (!map.load("tileset.png", {32, 32}, level.data(), 16, 8, horizontal, vertical))
+    if (!map.load("tileset.png", {32, 32}, level.data(), WORLD_WIDTH, WORLD_HEIGHT, WORLD_WIDTH*180, WORLD_HEIGHT*180))
         return -1;
 
     sf::View camera = sf::View({static_cast<float>(horizontal)/2, static_cast<float>(vertical)/2}, {static_cast<float>(horizontal), static_cast<float>(vertical)});
-    camera.zoom(0.8f);
+    //float zoom = 0.8;
+    //camera.zoom(zoom);
+    camera.zoom(2.f);
 
-    if (!texture.loadFromFile("red.png", false, sf::IntRect({0, 0}, {static_cast<int>(horizontal)/16, static_cast<int>(vertical)/8})))
+    if (!texture.loadFromFile("red.png", false, sf::IntRect({0, 0}, {180, 180})))
     {
         return -1;
     }
 
-    //Player player(texture);
     player.init(texture);
 
-    player.playerSprite.setPosition({static_cast<float>(horizontal/16*6), static_cast<float>(vertical/8*3)});
+    player.playerSprite.setPosition({(WORLD_WIDTH/2)*180, ((WORLD_HEIGHT/4)-1)*180});
     
     sf::Clock clock; // starts the clock
     sf::Time lastTime = clock.getElapsedTime();
     sf::Time currentTime;
-
-    //std::cout << &window << "\n";
-    //std::cout << &::window << "\n";
-    std::cout << &player << "\n";
 
     while (window.isOpen())
     {
@@ -81,6 +100,15 @@ int main()
             player.playerSprite.getPosition().x + player.playerSprite.getTexture().getSize().x/ 2,
             player.playerSprite.getPosition().y + player.playerSprite.getTexture().getSize().y/ 2
         });
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Q)) {
+            //zoom += 10.f * dt.asSeconds();
+            camera.zoom(2.25f);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::E)) {
+            //zoom += 10.f * dt.asSeconds();
+            camera.zoom(1/2.25f);
+        }
 
         window.setView(camera);
         window.clear();

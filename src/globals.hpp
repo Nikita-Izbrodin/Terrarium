@@ -14,6 +14,9 @@ extern sf::RenderWindow window;
 extern sf::Time dt;
 extern sf::Texture texture;
 extern Player player;
-extern std::array<int, 128> level;
+constexpr int WORLD_WIDTH = 4200;
+constexpr int WORLD_HEIGHT = 1000;
+extern std::array<int, WORLD_HEIGHT*WORLD_WIDTH> level;
+
 
 #endif

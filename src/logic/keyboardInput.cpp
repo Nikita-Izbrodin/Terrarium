@@ -20,15 +20,15 @@ void processKeyboardInput ()
             }
         } 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::A)) {
-            player.playerSprite.move({-.2f, 0.f});
+            player.playerSprite.move({-10.2f, 0.f});
             if (isLeftEntityCollidingMap(player, level.data())) {
-                player.playerSprite.move({.2f, 0.f});
+                player.playerSprite.move({10.2f, 0.f});
             }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::D)) {
-            player.playerSprite.move({.2f, 0.f});
+            player.playerSprite.move({10.2f, 0.f});
             if (isRightEntityCollidingMap(player, level.data())) {
-                player.playerSprite.move({-.2f, 0.f});
+                player.playerSprite.move({-10.2f, 0.f});
             }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Q)) {
