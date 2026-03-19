@@ -22,9 +22,9 @@ bool TileMap::load(
 
     // calculate which tiles the player can see
     float left = cameraCenterx - cameraSizex / 2;
-    float right = cameraCenterx + cameraSizex / 2;
+    float right = cameraCenterx + cameraSizex / 2 + 180;
     float top = cameraCentery - cameraSizey / 2;
-    float bottom = cameraCentery + cameraSizey / 2;
+    float bottom = cameraCentery + cameraSizey / 2 + 180;
 
     unsigned int xTileStart = left / 180;
     unsigned int xTileEnd = right / 180;

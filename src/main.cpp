@@ -34,6 +34,10 @@ int main()
     for (int i  = (WORLD_HEIGHT/4)*WORLD_WIDTH; i < (WORLD_HEIGHT/4)*WORLD_WIDTH + WORLD_WIDTH; i++)
     {
         tiles[i] = 0; // grass
+        if (i % 10 == 0) 
+        {
+            tiles[i] = 1;
+        }
     }
     for (int i = (WORLD_HEIGHT/4)*WORLD_WIDTH + WORLD_WIDTH; i < WORLD_HEIGHT*WORLD_WIDTH; i++)
     {
