@@ -3,12 +3,19 @@
 class TileMap : public sf::Drawable, public sf::Transformable
 {
 public:
-    bool load(const std::filesystem::path &tileset,
-        sf::Vector2u tileSize, const int *tiles,
-        unsigned int width,
-        unsigned int height,
-        unsigned int horizontal,
-        unsigned int vertical);
+    bool load(
+        const std::filesystem::path &tileset,
+    sf::Vector2u tileSize,
+    const int *tiles,
+    unsigned int worldWidthTiles,
+    unsigned int worldHeightTiles,
+    unsigned int worldWidthPixels,
+    unsigned int worldHeightPixels,
+    float cameraCenterx,
+    float cameraCentery,
+    float cameraSizex,
+    float cameraSizey
+    );
 
 private:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;

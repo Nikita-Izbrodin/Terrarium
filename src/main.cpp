@@ -62,10 +62,6 @@ int main()
     window.create(sf::VideoMode({horizontal, vertical}), "Terrarium", sf::State::Fullscreen);
     window.setVerticalSyncEnabled(false);
 
-    TileMap map;
-    if (!map.load("tileset.png", {32, 32}, level.data(), WORLD_WIDTH, WORLD_HEIGHT, WORLD_WIDTH*180, WORLD_HEIGHT*180))
-        return -1;
-
     sf::View camera = sf::View({static_cast<float>(horizontal)/2, static_cast<float>(vertical)/2}, {static_cast<float>(horizontal), static_cast<float>(vertical)});
     //float zoom = 0.8;
     //camera.zoom(zoom);
@@ -79,6 +75,27 @@ int main()
     player.init(texture);
 
     player.playerSprite.setPosition({(WORLD_WIDTH/2)*180, ((WORLD_HEIGHT/4)-1)*180});
+    
+    camera.setCenter({
+        player.playerSprite.getPosition().x + player.playerSprite.getTexture().getSize().x/ 2,
+        player.playerSprite.getPosition().y + player.playerSprite.getTexture().getSize().y/ 2
+    });
+
+    TileMap map;
+    if (!map.load(
+        "tileset.png",
+        {32, 32},
+        level.data(),
+        WORLD_WIDTH,
+        WORLD_HEIGHT,
+        WORLD_WIDTH*180,
+        WORLD_HEIGHT*180,
+        camera.getCenter().x,
+        camera.getCenter().y,
+        camera.getSize().x,
+        camera.getSize().y
+    ))
+        return -1;
     
     sf::Clock clock; // starts the clock
     sf::Time lastTime = clock.getElapsedTime();
@@ -103,15 +120,33 @@ int main()
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Q)) {
             //zoom += 10.f * dt.asSeconds();
-            camera.zoom(2.25f);
+            //camera.zoom(2.25f);
+            camera.zoom(1.05f);
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::E)) {
             //zoom += 10.f * dt.asSeconds();
-            camera.zoom(1/2.25f);
+            camera.zoom(1/1.05f);
         }
 
         window.setView(camera);
         window.clear();
+
+        TileMap map;
+        if (!map.load(
+            "tileset.png",
+            {32, 32},
+            level.data(),
+            WORLD_WIDTH,
+            WORLD_HEIGHT,
+            WORLD_WIDTH*180,
+            WORLD_HEIGHT*180,
+            camera.getCenter().x,
+            camera.getCenter().y,
+            camera.getSize().x,
+            camera.getSize().y
+        ))
+        return -1;
+
         window.draw(map);
         window.draw(player.playerSprite);
         window.display();

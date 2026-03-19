@@ -20,19 +20,19 @@ void processKeyboardInput ()
             }
         } 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::A)) {
-            player.playerSprite.move({-10.2f, 0.f});
+            player.playerSprite.move({-player.xVelocity * dt.asSeconds(), 0.f});
             if (isLeftEntityCollidingMap(player, level.data())) {
-                player.playerSprite.move({10.2f, 0.f});
+                player.playerSprite.move({player.xVelocity * dt.asSeconds(), 0.f});
             }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::D)) {
-            player.playerSprite.move({10.2f, 0.f});
+            player.playerSprite.move({player.xVelocity * dt.asSeconds(), 0.f});
             if (isRightEntityCollidingMap(player, level.data())) {
-                player.playerSprite.move({-10.2f, 0.f});
+                player.playerSprite.move({-player.xVelocity * dt.asSeconds(), 0.f});
             }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Q)) {
-            std::cout << &player << "\n";
+            //std::cout << &player << "\n";
             //std::cout << player.playerSprite.getPosition().x << "\n";
         }
 }
