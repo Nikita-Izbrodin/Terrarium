@@ -1,15 +1,18 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "wtypes.h"
+#include <wtypes.h>
 #include "tileMap.hpp"
+#include <vector>
 #include "entities/player.hpp"
 #include "logic/collision.hpp"
 #include "logic/keyboardInput.hpp"
 #include "globals.hpp"
-#include <vector>
+
 
 //const int WORLD_WIDTH = 4200;
 //const int WORLD_HEIGHT = 1200;
+
+// TODO refactor
 
 unsigned int horizontal;
 unsigned int vertical;
@@ -154,7 +157,7 @@ int main()
         window.draw(map);
         window.draw(player.playerSprite);
         window.display();
-        //std::cout << player.playerSprite.getPosition().x << "\n";
+        std::cout << player.playerSprite.getPosition().x << "\n";
 
         lastTime = currentTime;
     }
