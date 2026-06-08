@@ -32,7 +32,9 @@ void processKeyboardInput ()
             }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Q)) {
-            //std::cout << &player << "\n";
-            //std::cout << player.playerSprite.getPosition().x << "\n";
+            camera.zoom(1.05f);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::E)) {
+            camera.zoom(1/1.05f);
         }
 }

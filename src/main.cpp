@@ -8,26 +8,19 @@
 #include "logic/keyboardInput.hpp"
 #include "globals.hpp"
 
-
-//const int WORLD_WIDTH = 4200;
-//const int WORLD_HEIGHT = 1200;
-
-// TODO refactor
+// TODO improve globals
 
 unsigned int horizontal;
 unsigned int vertical;
-float gravity;
 sf::RenderWindow window;
 sf::Time dt;
 sf::Texture texture;
+sf::View camera;
 Player player(texture);
-std::array<int, WORLD_HEIGHT*WORLD_WIDTH> level; // !! Hardcoded size
+std::array<int, WORLD_HEIGHT*WORLD_WIDTH> level;
 
-int main()
+void createWorld()
 {
-    gravity = 1000.f;
-    //gravity = 0.f;
-
     int *tiles = level.data();
 
     for (int i  = 0; i < (WORLD_HEIGHT/4)*WORLD_WIDTH; i++)
@@ -46,63 +39,36 @@ int main()
     {
         tiles[i] = 3; // stone
     }
+}
 
-    /*
-    level = {
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1,
-        0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-        3, 3, 3, 3, 3, 3, 3, 3, 1, 3, 3, 3, 3, 3, 3, 3,
-        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-    };
-    */
-
+void initWindow()
+{
     RECT desktop;
     const HWND hDesktop = GetDesktopWindow();
     GetWindowRect(hDesktop, &desktop);
     horizontal = desktop.right;
     vertical = desktop.bottom;
-    
     window.create(sf::VideoMode({horizontal, vertical}), "Terrarium", sf::State::Fullscreen);
     window.setVerticalSyncEnabled(false);
+}
 
-    sf::View camera = sf::View({static_cast<float>(horizontal)/2, static_cast<float>(vertical)/2}, {static_cast<float>(horizontal), static_cast<float>(vertical)});
-    //float zoom = 0.8;
-    //camera.zoom(zoom);
+int main()
+{
+    createWorld();
+
+    initWindow();
+    
+    camera = sf::View({
+        static_cast<float>(horizontal)/2,
+        static_cast<float>(vertical)/2},
+        {static_cast<float>(horizontal),
+        static_cast<float>(vertical)
+    });
     camera.zoom(2.f);
 
-    if (!texture.loadFromFile("red.png", false, sf::IntRect({0, 0}, {180, 180})))
-    {
-        return -1;
-    }
-
+    if (!texture.loadFromFile("red.png", false, sf::IntRect({0, 0}, {180, 180}))) {return -1;}
     player.init(texture);
-
     player.playerSprite.setPosition({(WORLD_WIDTH/2)*180, ((WORLD_HEIGHT/4)-1)*180});
-    
-    camera.setCenter({
-        player.playerSprite.getPosition().x + player.playerSprite.getTexture().getSize().x/ 2,
-        player.playerSprite.getPosition().y + player.playerSprite.getTexture().getSize().y/ 2
-    });
-
-    TileMap map;
-    if (!map.load(
-        "tileset.png",
-        {32, 32},
-        level.data(),
-        WORLD_WIDTH,
-        WORLD_HEIGHT,
-        WORLD_WIDTH*180,
-        WORLD_HEIGHT*180,
-        camera.getCenter().x,
-        camera.getCenter().y,
-        camera.getSize().x,
-        camera.getSize().y
-    ))
-        return -1;
     
     sf::Clock clock; // starts the clock
     sf::Time lastTime = clock.getElapsedTime();
@@ -118,23 +84,12 @@ int main()
             if (event->is<sf::Event::Closed>())
                 window.close();            
         }
-
         processKeyboardInput();
+
         camera.setCenter({
             player.playerSprite.getPosition().x + player.playerSprite.getTexture().getSize().x/ 2,
             player.playerSprite.getPosition().y + player.playerSprite.getTexture().getSize().y/ 2
         });
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Q)) {
-            //zoom += 10.f * dt.asSeconds();
-            //camera.zoom(2.25f);
-            camera.zoom(1.05f);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::E)) {
-            //zoom += 10.f * dt.asSeconds();
-            camera.zoom(1/1.05f);
-        }
-
         window.setView(camera);
         window.clear();
 
@@ -151,13 +106,11 @@ int main()
             camera.getCenter().y,
             camera.getSize().x,
             camera.getSize().y
-        ))
-        return -1;
+        )) {return -1;}
 
         window.draw(map);
         window.draw(player.playerSprite);
         window.display();
-        std::cout << player.playerSprite.getPosition().x << "\n";
 
         lastTime = currentTime;
     }
