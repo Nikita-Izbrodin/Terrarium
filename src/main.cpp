@@ -1,7 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <fstream> 
 #include <wtypes.h>
-#include "tileMap.hpp"
+#include <sys/stat.h>
+#include "world/tileMap.hpp"
 #include <vector>
 #include "entities/player.hpp"
 #include "logic/collision.hpp"
@@ -23,7 +25,7 @@ void createWorld()
 {
     int *tiles = level.data();
 
-    for (int i  = 0; i < (WORLD_HEIGHT/4)*WORLD_WIDTH; i++)
+    for (int i = 0; i < (WORLD_HEIGHT/4)*WORLD_WIDTH; i++)
     {
         tiles[i] = 1; // air
     }
@@ -39,6 +41,31 @@ void createWorld()
     {
         tiles[i] = 3; // stone
     }
+
+    std::ofstream file;
+    file.open("../../src/worldSaves/defaultWorld.txt");
+    for (int i = 0; i < WORLD_HEIGHT*WORLD_WIDTH; i++)
+    {
+        file << (tiles[i]);
+        file << ("\n");
+    }
+    file.close();
+}
+
+void loadWorld()
+{
+    int *tiles = level.data();
+
+    std::string tileValue;
+    std::ifstream file;
+    file.open("../../src/worldSaves/defaultWorld.txt");
+    for (int i=0; i < WORLD_HEIGHT*WORLD_WIDTH; i++)
+    {
+        getline(file, tileValue);
+        char * c = tileValue.data();
+        tiles[i] = atoi(c);
+    }
+    file.close();
 }
 
 void initWindow()
@@ -54,8 +81,16 @@ void initWindow()
 
 int main()
 {
-    createWorld();
-
+    const char* file = "../../src/worldSaves/defaultWorld.txt";
+    struct stat sb;
+    if (!((stat(file, &sb) == 0 && !(sb.st_mode & S_IFDIR)))) // if file does not exist
+    {
+        createWorld();
+    } else
+    {
+        loadWorld();
+    }
+    
     initWindow();
     
     camera = sf::View({
