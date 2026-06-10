@@ -3,7 +3,7 @@
 #include "../globals.hpp"
 #include <iostream>
 
-void processKeyboardInput ()
+void processKeyboardInput()
 {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scan::Escape))
             window.close();

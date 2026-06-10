@@ -9,6 +9,7 @@
 #include "logic/collision.hpp"
 #include "logic/keyboardInput.hpp"
 #include "globals.hpp"
+#include "world/worldGeneration.hpp"
 
 // TODO improve globals
 
@@ -24,22 +25,12 @@ std::array<int, WORLD_HEIGHT*WORLD_WIDTH> level;
 void createWorld()
 {
     int *tiles = level.data();
+    
+    int* pWorld = generateTerrain();
 
-    for (int i = 0; i < (WORLD_HEIGHT/4)*WORLD_WIDTH; i++)
+    for (int i = 0; i < WORLD_HEIGHT * WORLD_WIDTH; i++)
     {
-        tiles[i] = 1; // air
-    }
-    for (int i  = (WORLD_HEIGHT/4)*WORLD_WIDTH; i < (WORLD_HEIGHT/4)*WORLD_WIDTH + WORLD_WIDTH; i++)
-    {
-        tiles[i] = 0; // grass
-        if (i % 10 == 0) 
-        {
-            tiles[i] = 1;
-        }
-    }
-    for (int i = (WORLD_HEIGHT/4)*WORLD_WIDTH + WORLD_WIDTH; i < WORLD_HEIGHT*WORLD_WIDTH; i++)
-    {
-        tiles[i] = 3; // stone
+        tiles[i] = pWorld[i];
     }
 
     std::ofstream file;
@@ -90,7 +81,7 @@ int main()
     {
         loadWorld();
     }
-    
+
     initWindow();
     
     camera = sf::View({

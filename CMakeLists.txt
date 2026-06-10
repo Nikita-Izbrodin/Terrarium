@@ -15,6 +15,7 @@ FetchContent_MakeAvailable(SFML)
 add_executable(${PROJECT_NAME}
 src/main.cpp
 src/world/tileMap.cpp
+src/world/worldGeneration.cpp
 src/entities/player.cpp
 src/logic/collision.cpp
 src/logic/keyboardInput.cpp
