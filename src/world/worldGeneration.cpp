@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <iostream>
+#include <cmath>
 #include "../globals.hpp"
 
 int* generateTerrain()
@@ -15,9 +16,6 @@ int* generateTerrain()
     int index = 0;
 
     int* world = new int[WORLD_WIDTH*WORLD_HEIGHT];
-
-    std::ofstream file;
-    file.open("../../src/worldSaves/noiseTest.txt");
 
     for (int y = 0; y < WORLD_HEIGHT; y++)
     {
@@ -35,12 +33,48 @@ int* generateTerrain()
                 
             } else
             {
-                world[index] = 0;
+                if (y < WORLD_HEIGHT/4)
+                {
+                    world[index] = 1;
+                } else
+                {
+                    world[index] = 1;
+                }
             }
             index++;
         }
-        file << ("\n");
     }
+
+    std::ofstream file;
+    file.open("../../src/worldSaves/test.txt");
+
+    for (int x = 0; x < WORLD_WIDTH; x++)
+        {
+            double xDegrees = x*3.141592653589793/180*10;
+            int yLevel = std::round(std::sin(xDegrees)*10);
+            file << yLevel;
+            file << "\n";
+            if ((yLevel >= 0))
+            {
+                world[x + (WORLD_HEIGHT/4 - yLevel) * WORLD_WIDTH] = 0;
+                
+                yLevel--;
+                while (yLevel >= 0)
+                {
+                    world[x + (WORLD_HEIGHT/4 - yLevel) * WORLD_WIDTH] = 3;
+                    yLevel--;
+                }
+            }
+            
+        }
+
+    for (int x = 0; x < WORLD_WIDTH; x++)
+        {
+           if (world[x + (WORLD_HEIGHT/4) * WORLD_WIDTH] == 3)
+           {
+                world[x + (WORLD_HEIGHT/4) * WORLD_WIDTH] = 0;
+           }
+        }
 
     file.close();
     return world;

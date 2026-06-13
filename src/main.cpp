@@ -94,7 +94,7 @@ int main()
 
     if (!texture.loadFromFile("red.png", false, sf::IntRect({0, 0}, {180, 180}))) {return -1;}
     player.init(texture);
-    player.playerSprite.setPosition({(WORLD_WIDTH/2)*180, ((WORLD_HEIGHT/4)-1)*180});
+    player.playerSprite.setPosition({(WORLD_WIDTH/2)*180, ((WORLD_HEIGHT/4)-1-15)*180});
     
     sf::Clock clock; // starts the clock
     sf::Time lastTime = clock.getElapsedTime();
