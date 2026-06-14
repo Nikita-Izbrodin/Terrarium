@@ -45,16 +45,19 @@ int* generateTerrain()
         }
     }
 
-    std::ofstream file;
-    file.open("../../src/worldSaves/test.txt");
+    for (int x = 0; x < WORLD_WIDTH; x++)
+        {
+           if (world[x + (WORLD_HEIGHT/4) * WORLD_WIDTH] == 3)
+           {
+                world[x + (WORLD_HEIGHT/4) * WORLD_WIDTH] = 0;
+           }
+        }
 
     for (int x = 0; x < WORLD_WIDTH; x++)
         {
             double xDegrees = x*3.141592653589793/180*10;
             int yLevel = std::round(std::sin(xDegrees)*10);
-            file << yLevel;
-            file << "\n";
-            if ((yLevel >= 0))
+            if ((yLevel >= 0) && (world[x + (WORLD_HEIGHT/4) * WORLD_WIDTH] != 1))
             {
                 world[x + (WORLD_HEIGHT/4 - yLevel) * WORLD_WIDTH] = 0;
                 
@@ -68,14 +71,5 @@ int* generateTerrain()
             
         }
 
-    for (int x = 0; x < WORLD_WIDTH; x++)
-        {
-           if (world[x + (WORLD_HEIGHT/4) * WORLD_WIDTH] == 3)
-           {
-                world[x + (WORLD_HEIGHT/4) * WORLD_WIDTH] = 0;
-           }
-        }
-
-    file.close();
     return world;
 }
