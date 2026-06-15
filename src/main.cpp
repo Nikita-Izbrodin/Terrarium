@@ -111,6 +111,7 @@ int main()
                 window.close();            
         }
         processKeyboardInput();
+        processMouseInput();
 
         camera.setCenter({
             player.playerSprite.getPosition().x + player.playerSprite.getTexture().getSize().x/ 2,
