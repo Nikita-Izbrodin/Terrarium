@@ -92,7 +92,7 @@ int main()
     });
     camera.zoom(2.f);
 
-    if (!texture.loadFromFile("red.png", false, sf::IntRect({0, 0}, {180, 180}))) {return -1;}
+    if (!texture.loadFromFile("../../assets/red.png", false, sf::IntRect({0, 0}, {180, 180}))) {return -1;}
     player.init(texture);
     player.playerSprite.setPosition({(WORLD_WIDTH/2)*180, ((WORLD_HEIGHT/4)-1-15)*180});
     
@@ -122,7 +122,7 @@ int main()
 
         TileMap map;
         if (!map.load(
-            "tileset.png",
+            "../../assets/tileset.png",
             {32, 32},
             level.data(),
             WORLD_WIDTH,
