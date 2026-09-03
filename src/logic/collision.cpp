@@ -7,7 +7,7 @@ bool isTopEntityCollidingMap(Player player, const int* tiles) {
     unsigned int cornerX = static_cast<unsigned int>(floor(player.playerSprite.getPosition().x / 180));
     unsigned int cornerY = static_cast<unsigned int>(floor(player.playerSprite.getPosition().y / 180));
     if (tiles[cornerX + cornerY * WORLD_WIDTH] == 0 
-        || tiles[cornerX + cornerY * WORLD_WIDTH] == 3) {
+        || tiles[cornerX + cornerY * WORLD_WIDTH] == 1) {
         topLeftColliding = true;
     }
 
@@ -15,7 +15,7 @@ bool isTopEntityCollidingMap(Player player, const int* tiles) {
     cornerX = static_cast<unsigned int>(floor((player.playerSprite.getPosition().x + 180 - 1) / 180));
     cornerY = static_cast<unsigned int>(floor(player.playerSprite.getPosition().y / 180));
     if (tiles[cornerX + cornerY * WORLD_WIDTH] == 0 
-        || tiles[cornerX + cornerY * WORLD_WIDTH] == 3) {
+        || tiles[cornerX + cornerY * WORLD_WIDTH] == 1) {
         topRightColliding = true;
     }
 
@@ -27,7 +27,7 @@ bool isBotEntityCollidingMap(Player player, const int* tiles) {
     unsigned int cornerX = static_cast<unsigned int>(floor(player.playerSprite.getPosition().x / 180));
     unsigned int cornerY = static_cast<unsigned int>(floor((player.playerSprite.getPosition().y + 180) / 180));
     if (tiles[cornerX + cornerY * WORLD_WIDTH] == 0 
-        || tiles[cornerX + cornerY * WORLD_WIDTH] == 3) {
+        || tiles[cornerX + cornerY * WORLD_WIDTH] == 1) {
         botLeftColliding = true;
     }
 
@@ -35,7 +35,7 @@ bool isBotEntityCollidingMap(Player player, const int* tiles) {
     cornerX = static_cast<unsigned int>(floor((player.playerSprite.getPosition().x + 180 - 1)/ 180));
     cornerY = static_cast<unsigned int>(floor((player.playerSprite.getPosition().y + 180)/ 180));
     if (tiles[cornerX + cornerY * WORLD_WIDTH] == 0 
-        || tiles[cornerX + cornerY * WORLD_WIDTH] == 3) {
+        || tiles[cornerX + cornerY * WORLD_WIDTH] == 1) {
         botRightColliding = true;
     }
 
@@ -47,7 +47,7 @@ bool isLeftEntityCollidingMap(Player player, const int* tiles) {
     unsigned int cornerX = static_cast<unsigned int>(floor(player.playerSprite.getPosition().x / 180));
     unsigned int cornerY = static_cast<unsigned int>(floor(player.playerSprite.getPosition().y / 180));
     if (tiles[cornerX + cornerY * WORLD_WIDTH] == 0 
-        || tiles[cornerX + cornerY * WORLD_WIDTH] == 3) {
+        || tiles[cornerX + cornerY * WORLD_WIDTH] == 1) {
         topLeftColliding = true;
     }
 
@@ -55,7 +55,7 @@ bool isLeftEntityCollidingMap(Player player, const int* tiles) {
     cornerX = static_cast<unsigned int>(floor(player.playerSprite.getPosition().x / 180));
     cornerY = static_cast<unsigned int>(floor((player.playerSprite.getPosition().y + 180 - 1) / 180));
     if (tiles[cornerX + cornerY * WORLD_WIDTH] == 0 
-        || tiles[cornerX + cornerY * WORLD_WIDTH] == 3) {
+        || tiles[cornerX + cornerY * WORLD_WIDTH] == 1) {
         botLeftColliding = true;
     }
 
@@ -67,7 +67,7 @@ bool isRightEntityCollidingMap(Player player, const int* tiles) {
     unsigned int cornerX = static_cast<unsigned int>(floor((player.playerSprite.getPosition().x + 180 - 1)/ 180));
     unsigned int cornerY = static_cast<unsigned int>(floor((player.playerSprite.getPosition().y + 180 -1) / 180));
     if (tiles[cornerX + cornerY * WORLD_WIDTH] == 0 
-        || tiles[cornerX + cornerY * WORLD_WIDTH] == 3) {
+        || tiles[cornerX + cornerY * WORLD_WIDTH] == 1) {
         botRightColliding = true;
     }
 
@@ -75,7 +75,7 @@ bool isRightEntityCollidingMap(Player player, const int* tiles) {
     cornerX = static_cast<unsigned int>(floor((player.playerSprite.getPosition().x + 180 - 1)/ 180));
     cornerY = static_cast<unsigned int>(floor(player.playerSprite.getPosition().y / 180));
     if (tiles[cornerX + cornerY * WORLD_WIDTH] == 0 
-        || tiles[cornerX + cornerY * WORLD_WIDTH] == 3) {
+        || tiles[cornerX + cornerY * WORLD_WIDTH] == 1) {
         topRightColliding = true;
     }
 

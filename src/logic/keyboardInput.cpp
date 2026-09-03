@@ -53,7 +53,7 @@ void processMouseInput()
         int targetTileY = (camera.getCenter().y - yOffset/yZoom)/180;
 
         int *tiles = level.data();
-        tiles[targetTileX + targetTileY * WORLD_WIDTH] = 1;
+        tiles[targetTileX + targetTileY * WORLD_WIDTH] = 2;
     }
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
     {

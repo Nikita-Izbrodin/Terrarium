@@ -25,20 +25,20 @@ int* generateTerrain()
             {
                 if (y < WORLD_HEIGHT/4)
                 {
-                    world[index] = 1;
+                    world[index] = 2;
                 } else
                 {
-                    world[index] = 3;
+                    world[index] = 1;
                 }
                 
             } else
             {
                 if (y < WORLD_HEIGHT/4)
                 {
-                    world[index] = 1;
+                    world[index] = 2;
                 } else
                 {
-                    world[index] = 1;
+                    world[index] = 2;
                 }
             }
             index++;
@@ -47,7 +47,7 @@ int* generateTerrain()
 
     for (int x = 0; x < WORLD_WIDTH; x++)
         {
-           if (world[x + (WORLD_HEIGHT/4) * WORLD_WIDTH] == 3)
+           if (world[x + (WORLD_HEIGHT/4) * WORLD_WIDTH] == 1)
            {
                 world[x + (WORLD_HEIGHT/4) * WORLD_WIDTH] = 0;
            }
@@ -57,14 +57,14 @@ int* generateTerrain()
         {
             double xDegrees = x*3.141592653589793/180*10;
             int yLevel = std::round(std::sin(xDegrees)*10);
-            if ((yLevel >= 0) && (world[x + (WORLD_HEIGHT/4) * WORLD_WIDTH] != 1))
+            if ((yLevel >= 0) && (world[x + (WORLD_HEIGHT/4) * WORLD_WIDTH] != 2))
             {
                 world[x + (WORLD_HEIGHT/4 - yLevel) * WORLD_WIDTH] = 0;
                 
                 yLevel--;
                 while (yLevel >= 0)
                 {
-                    world[x + (WORLD_HEIGHT/4 - yLevel) * WORLD_WIDTH] = 3;
+                    world[x + (WORLD_HEIGHT/4 - yLevel) * WORLD_WIDTH] = 1;
                     yLevel--;
                 }
             }

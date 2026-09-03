@@ -122,8 +122,8 @@ int main()
 
         TileMap map;
         if (!map.load(
-            "../../assets/tileset.png",
-            {32, 32},
+            "../../assets/terrarium-tileset.png",
+            {16, 16},
             level.data(),
             WORLD_WIDTH,
             WORLD_HEIGHT,
